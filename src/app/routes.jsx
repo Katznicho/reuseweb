@@ -5,12 +5,15 @@ import { authRoles } from './auth/authRoles';
 import Loadable from './components/Loadable';
 import MatxLayout from './components/MatxLayout/MatxLayout';
 import materialRoutes from 'app/views/material-kit/MaterialRoutes';
+import Users from './views/users/Users';
+import Products from './views/users/Products';
 
 // session pages
 const NotFound = Loadable(lazy(() => import('app/views/sessions/NotFound')));
 const JwtLogin = Loadable(lazy(() => import('app/views/sessions/JwtLogin')));
 const JwtRegister = Loadable(lazy(() => import('app/views/sessions/JwtRegister')));
 const ForgotPassword = Loadable(lazy(() => import('app/views/sessions/ForgotPassword')));
+// const Users = Loadable(lazy)
 
 // echart page
 const AppEchart = Loadable(lazy(() => import('app/views/charts/echarts/AppEchart')));
@@ -35,11 +38,40 @@ const routes = [
       },
 
       // e-chart rooute
+      // {
+      //   path: '/charts/echarts',
+      //   element: <AppEchart />,
+      //   auth: authRoles.editor
+      // }
+      //users
       {
-        path: '/charts/echarts',
-        element: <AppEchart />,
-        auth: authRoles.editor
+        path: '/users/all',
+        element: <Users />,
+        auth: authRoles.admin
+      },
+      //users
+
+      //products
+      {
+        path: '/products/all',
+        element: <Products />,
+        auth: authRoles.admin
+      },
+      {
+        path: '/products/accepted',
+        element: <Products />,
+        auth: authRoles.admin
+      },
+      {
+        path: '/products/delivered',
+        element: <Products />
+      },
+      {
+        path: '/products/rejected',
+        element: <Products />,
+        auth: authRoles.admin
       }
+      //products
     ]
   },
 
