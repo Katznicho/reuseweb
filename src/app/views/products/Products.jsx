@@ -21,7 +21,7 @@ const Products = () => {
         />
       </Box>
 
-      <SimpleCard title="Pagination Table">
+      <SimpleCard title="Products Table">
         <ProductTable />
       </SimpleCard>
     </Container>

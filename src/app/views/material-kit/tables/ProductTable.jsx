@@ -1,7 +1,7 @@
 import {
+  Avatar,
   Box,
-  Icon,
-  IconButton,
+  Button,
   styled,
   Table,
   TableBody,
@@ -10,7 +10,9 @@ import {
   TablePagination,
   TableRow
 } from '@mui/material';
-import { useState } from 'react';
+import { getProducts } from '../../../../firebase';
+import { useState, useEffect } from 'react';
+import { MatxLoading } from 'app/components';
 
 const StyledTable = styled(Table)(() => ({
   whiteSpace: 'pre',
@@ -22,72 +24,28 @@ const StyledTable = styled(Table)(() => ({
   }
 }));
 
+const StyledButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(1)
+}));
+
+const StyledAvatar = styled(Avatar)(() => ({
+  width: '100px !important',
+  height: '100px !important'
+}));
+
 const ProductTable = () => {
-  const [products, setProducts] = useState([
-    {
-      name: 'john doe',
-      date: '18 january, 2019',
-      amount: 1000,
-      status: 'close',
-      company: 'ABC Fintech LTD.'
-    },
-    {
-      name: 'kessy bryan',
-      date: '10 january, 2019',
-      amount: 9000,
-      status: 'open',
-      company: 'My Fintech LTD.'
-    },
-    {
-      name: 'kessy bryan',
-      date: '10 january, 2019',
-      amount: 9000,
-      status: 'open',
-      company: 'My Fintech LTD.'
-    },
-    {
-      name: 'james cassegne',
-      date: '8 january, 2019',
-      amount: 5000,
-      status: 'close',
-      company: 'Collboy Tech LTD.'
-    },
-    {
-      name: 'lucy brown',
-      date: '1 january, 2019',
-      amount: 89000,
-      status: 'open',
-      company: 'ABC Fintech LTD.'
-    },
-    {
-      name: 'lucy brown',
-      date: '1 january, 2019',
-      amount: 89000,
-      status: 'open',
-      company: 'ABC Fintech LTD.'
-    },
-    {
-      name: 'lucy brown',
-      date: '1 january, 2019',
-      amount: 89000,
-      status: 'open',
-      company: 'ABC Fintech LTD.'
-    },
-    {
-      name: 'lucy brown',
-      date: '1 january, 2019',
-      amount: 89000,
-      status: 'open',
-      company: 'ABC Fintech LTD.'
-    },
-    {
-      name: 'lucy brown',
-      date: '1 january, 2019',
-      amount: 89000,
-      status: 'open',
-      company: 'ABC Fintech LTD.'
-    }
-  ]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect(async () => {
+    try {
+      setLoading(true);
+      let products = await getProducts();
+      setProducts(products);
+      setLoading(false);
+    } catch (error) {}
+  }, []);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -99,36 +57,44 @@ const ProductTable = () => {
     setPage(0);
   };
 
+  if (loading) return <MatxLoading />;
+
   return (
     <Box width="100%" overflow="auto">
       <StyledTable>
         <TableHead>
           <TableRow>
+            <TableCell align="center">Image</TableCell>
             <TableCell align="left">Name</TableCell>
-            <TableCell align="center">Company</TableCell>
-            <TableCell align="center">Start Date</TableCell>
+            <TableCell align="center">Category</TableCell>
+            <TableCell align="center">Estimated Weight</TableCell>
             <TableCell align="center">Status</TableCell>
-            <TableCell align="center">Amount</TableCell>
             <TableCell align="right">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {products
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((product, index) => (
-              <TableRow key={index}>
-                <TableCell align="left">{product.name}</TableCell>
-                <TableCell align="center">{product.company}</TableCell>
-                <TableCell align="center">{product.date}</TableCell>
-                <TableCell align="center">{product.status}</TableCell>
-                <TableCell align="center">${product.amount}</TableCell>
-                <TableCell align="right">
-                  <IconButton>
-                    <Icon color="error">close</Icon>
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+          {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product) => (
+            <TableRow key={product?.id}>
+              <TableCell align="center">
+                <StyledAvatar src={product?.data?.product?.coverImage} />
+              </TableCell>
+              {/* <TableCell align="center">{product?.data?.product?.title}</TableCell> */}
+
+              <TableCell align="center">{product?.data?.product?.title}</TableCell>
+              <TableCell align="center">{product?.data?.product?.category}</TableCell>
+              <TableCell align="center">{product?.data?.product?.estimatedWeight}</TableCell>
+              <TableCell align="center">{product?.data?.product?.status}</TableCell>
+              <TableCell align="right">
+                <StyledButton
+                  color="info"
+                  variant="contained"
+                  href={`/product/details/${product.id}`}
+                >
+                  View Details
+                </StyledButton>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </StyledTable>
 

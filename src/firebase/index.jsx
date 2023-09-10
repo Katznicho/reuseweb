@@ -1,4 +1,4 @@
-import { getDocs, collection } from 'firebase/firestore';
+import { getDocs, collection, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './config';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
@@ -16,6 +16,20 @@ export const getUsers = async () => {
   }
 };
 
+export const getUserById = async (userId) => {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    if (userDoc.exists()) {
+      return { id: userDoc.id, data: userDoc.data() };
+    } else {
+      throw new Error('User not found');
+    }
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error; // Rethrow the error to handle it outside this function if needed.
+  }
+};
+
 export const getProducts = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'products'));
@@ -26,6 +40,20 @@ export const getProducts = async () => {
     return products;
   } catch (error) {
     console.error('Error Occurred:', error);
+    throw error; // Rethrow the error to handle it outside this function if needed.
+  }
+};
+
+export const getProductById = async (productId) => {
+  try {
+    const productDoc = await getDoc(doc(db, 'products', productId));
+    if (productDoc.exists()) {
+      return { id: productDoc.id, data: productDoc.data() };
+    } else {
+      throw new Error('Product not found');
+    }
+  } catch (error) {
+    console.error('Error fetching product:', error);
     throw error; // Rethrow the error to handle it outside this function if needed.
   }
 };

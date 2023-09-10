@@ -6,10 +6,12 @@ import Loadable from './components/Loadable';
 import MatxLayout from './components/MatxLayout/MatxLayout';
 import materialRoutes from 'app/views/material-kit/MaterialRoutes';
 import Users from './views/users/Users';
-import Products from './views/users/Products';
+import Products from './views/products/Products';
 import VerifyUser from './views/users/VerifyUser';
 import UnVerifyUser from './views/users/UnVerifyUser';
 import UserDetails from './views/users/UserDetails';
+import { AcceptProducts } from './views/products/AcceptProducts';
+import ProductDetails from './views/products/ProductDetails';
 
 // session pages
 const NotFound = Loadable(lazy(() => import('app/views/sessions/NotFound')));
@@ -87,6 +89,16 @@ const routes = [
       {
         path: '/products/rejected',
         element: <Products />,
+        auth: authRoles.admin
+      },
+      {
+        path:"/product/accept/:productId",
+        element:<AcceptProducts/>,
+        auth: authRoles.admin
+      },
+      {
+        path:"/product/details/:productId",
+        element:<ProductDetails/>,
         auth: authRoles.admin
       }
       //products
