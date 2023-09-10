@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
-import { Box, Card, Grid, styled, useTheme } from '@mui/material';
-import PaginationTable from '../material-kit/tables/PaginationTable';
+import React from 'react';
+import { Box, styled } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
+import ProductTable from '../material-kit/tables/ProductTable';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -22,7 +22,7 @@ const Products = () => {
       </Box>
 
       <SimpleCard title="Pagination Table">
-        <PaginationTable />
+        <ProductTable />
       </SimpleCard>
     </Container>
   );

@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
-import PaginationTable from '../material-kit/tables/PaginationTable';
-import { Box, Card, Grid, styled, useTheme } from '@mui/material';
+import React from 'react';
+import { Box, styled } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
+import UserTable from '../material-kit/tables/UserTable';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -19,8 +19,8 @@ function Users() {
         <Breadcrumb routeSegments={[{ name: 'Users', path: '/users/all' }, { name: 'Users' }]} />
       </Box>
 
-      <SimpleCard title="Pagination Table">
-        <PaginationTable />
+      <SimpleCard title="Users Table">
+        <UserTable />
       </SimpleCard>
     </Container>
   );

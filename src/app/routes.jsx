@@ -7,6 +7,9 @@ import MatxLayout from './components/MatxLayout/MatxLayout';
 import materialRoutes from 'app/views/material-kit/MaterialRoutes';
 import Users from './views/users/Users';
 import Products from './views/users/Products';
+import VerifyUser from './views/users/VerifyUser';
+import UnVerifyUser from './views/users/UnVerifyUser';
+import UserDetails from './views/users/UserDetails';
 
 // session pages
 const NotFound = Loadable(lazy(() => import('app/views/sessions/NotFound')));
@@ -47,6 +50,21 @@ const routes = [
       {
         path: '/users/all',
         element: <Users />,
+        auth: authRoles.admin
+      },
+      {
+        path: '/user/verify/:userId',
+        element: <VerifyUser />,
+        auth: authRoles.admin
+      },
+      {
+        path: '/user/verify/:userId',
+        element: <UnVerifyUser />,
+        auth: authRoles.admin
+      },
+      {
+        path: '/user/details/:userId',
+        element: <UserDetails />,
         auth: authRoles.admin
       },
       //users
