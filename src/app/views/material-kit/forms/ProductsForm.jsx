@@ -12,15 +12,21 @@ import {
   ImageList,
   ImageListItem,
   ImageListItemBar,
-  TextField
+  TextField,
+  Snackbar
 } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { sendPushNotification, updateProductStatus, storeNotification } from '../../../../firebase';
+import { useNavigate } from 'react-router-dom';
 
 const ProductsForm = ({ productDetails, user, category, community }) => {
+  const navigate = useNavigate();
   const [isOpenAcceptDialog, setIsOpenAcceptDialog] = useState(false);
   const [isOpenRejectDialog, setIsOpenRejectDialog] = useState(false);
 
-  const [totalAmount, setTotalAmount] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const [totalAmount, setTotalAmount] = useState(0);
   const [reason, setReason] = useState('');
 
   const handleOpenAcceptDialog = () => {
@@ -40,9 +46,75 @@ const ProductsForm = ({ productDetails, user, category, community }) => {
   };
 
   const onAcceptProduct = () => {
+    setLoading(true);
     //update product status to accepted
-    
-  }
+
+    const title = `${productDetails?.data?.title} Accepted`;
+    const message = `Hello ${user?.data?.firstName} ${user?.data?.lastName} your product has been accepted please check the app for more details`;
+    const token = user?.data?.deviceId;
+
+    updateProductStatus(productDetails?.id, 'ACCEPTED', totalAmount, reason);
+
+    if (token) {
+      sendPushNotification(title, message, token);
+    }
+
+    //store notification
+
+    // Call the storeNotification function with the notification data
+    const notificationData = {
+      // Add your notification data here,
+      description: `Hello ${user?.data?.firstName} ${user?.data?.lastName} your product has been accepted please check the app for more details`,
+      status: 'ACCEPTED',
+      unRead: true,
+      title: `${productDetails?.data?.title} Accepted`,
+      userId: productDetails?.data?.userId
+    };
+
+    storeNotification(notificationData);
+
+    //close dialog
+    handleCloseAcceptDialog();
+    setLoading(false);
+
+    //show snackbar
+    <Snackbar
+      open={true}
+      autoHideDuration={6000}
+      // onClose={handleClose}
+      message="Product accepted successfully"
+      // action={action}
+    />;
+
+    //navigate  to all products
+    navigate('/products/all');
+  };
+
+  const onRejectProduct = () => {
+    setLoading(true);
+    const title = `${productDetails?.data?.title} Rejected`;
+    const message = `Hello ${user?.data?.firstName} ${user?.data?.lastName} your product has been rejected please check the app for more details`;
+    const token = user?.data?.deviceId;
+    updateProductStatus(productDetails?.id, 'REJECTED', totalAmount, reason);
+    if (token) {
+      sendPushNotification(title, message, token);
+    }
+    //store notification
+    const notificationData = {
+      description: `Hello ${user?.data?.firstName} ${user?.data?.lastName} your product has been rejected please check the app for more details`,
+      status: 'REJECTED',
+      unRead: true,
+      title: `${productDetails?.data?.title} Rejected`,
+      userId: productDetails?.data?.userId
+    };
+
+    storeNotification(notificationData);
+    //close dialog
+    handleCloseRejectDialog();
+    setLoading(false);
+
+    navigate('/products/all');
+  };
 
   return (
     <div>
@@ -62,13 +134,23 @@ const ProductsForm = ({ productDetails, user, category, community }) => {
                 fullWidth
                 onChange={(e) => setTotalAmount(e.target.value)}
               />
+              <DialogContentText>Enter Description</DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="reason"
+                label="Enter Description"
+                type="text"
+                fullWidth
+                onChange={(e) => setReason(e.target.value)}
+              />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseAcceptDialog} color="error">
                 Cancel
               </Button>
-              <Button onClick={handleOpenAcceptDialog} color="success">
-                Finish
+              <Button color="success" onClick={onAcceptProduct} disabled={loading}>
+                Accept Product
               </Button>
             </DialogActions>
           </Dialog>
@@ -95,8 +177,8 @@ const ProductsForm = ({ productDetails, user, category, community }) => {
               <Button onClick={handleCloseRejectDialog} color="error">
                 Cancel
               </Button>
-              <Button onClick={handleOpenRejectDialog} color="success">
-                Finish
+              <Button onClick={onRejectProduct} color="success" disabled={loading}>
+                Reject Product
               </Button>
             </DialogActions>
           </Dialog>

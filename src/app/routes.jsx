@@ -29,17 +29,17 @@ const Analytics = Loadable(lazy(() => import('app/views/dashboard/Analytics')));
 const routes = [
   {
     element: (
-      <AuthGuard>
-        <MatxLayout />
-      </AuthGuard>
+      // <AuthGuard>
+      <MatxLayout />
+      // </AuthGuard>
     ),
     children: [
       ...materialRoutes,
       // dashboard route
       {
         path: '/dashboard/default',
-        element: <Analytics />,
-        auth: authRoles.admin
+        element: <Analytics />
+        // auth: authRoles.admin
       },
 
       // e-chart rooute
@@ -51,13 +51,13 @@ const routes = [
       //users
       {
         path: '/users/all',
-        element: <Users />,
-        auth: authRoles.admin
+        element: <Users />
+        // auth: authRoles.admin
       },
       {
         path: '/user/verify/:userId',
-        element: <VerifyUser />,
-        auth: authRoles.admin
+        element: <VerifyUser />
+        // auth: authRoles.admin
       },
       {
         path: '/user/verify/:userId',
@@ -66,8 +66,8 @@ const routes = [
       },
       {
         path: '/user/details/:userId',
-        element: <UserDetails />,
-        auth: authRoles.admin
+        element: <UserDetails />
+        // auth: authRoles.admin
       },
       //users
 
@@ -92,13 +92,13 @@ const routes = [
         auth: authRoles.admin
       },
       {
-        path:"/product/accept/:productId",
-        element:<AcceptProducts/>,
+        path: '/product/accept/:productId',
+        element: <AcceptProducts />,
         auth: authRoles.admin
       },
       {
-        path:"/product/details/:productId",
-        element:<ProductDetails/>,
+        path: '/product/details/:productId',
+        element: <ProductDetails />,
         auth: authRoles.admin
       }
       //products
