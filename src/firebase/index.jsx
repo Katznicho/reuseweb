@@ -74,6 +74,36 @@ export const getProductById = async (productId) => {
 //   }
 // };
 
+//get all categories
+export const getAllCategories = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'categories'));
+    const categories = [];
+    querySnapshot.forEach((doc) => {
+      categories.push({ id: doc.id, data: doc.data() });
+    });
+    return categories;
+  } catch (error) {
+    console.error('Error Occurred:', error);
+    throw error; // Rethrow the error to handle it outside this function if needed.
+  }
+};
+
+//get category by id
+export const getCategoryById = async (categoryId) => {
+  try {
+    const categoryDoc = await getDoc(doc(db, 'categories', categoryId));
+    if (categoryDoc.exists()) {
+      return { id: categoryDoc.id, data: categoryDoc.data() };
+    } else {
+      throw new Error('Category not found');
+    }
+  } catch (error) {
+    console.error('Error fetching category:', error);
+    throw error; // Rethrow the error to handle it outside this function if needed.
+  }
+};
+
 export const getTotalProducts = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'products'));

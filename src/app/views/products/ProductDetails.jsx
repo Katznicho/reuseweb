@@ -3,7 +3,7 @@ import { Breadcrumb, MatxLoading, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductsForm from '../material-kit/forms/ProductsForm';
-import { getProductById } from '../../../firebase';
+import { getProductById, getCategoryById, getUserById } from '../../../firebase';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -16,13 +16,31 @@ const Container = styled('div')(({ theme }) => ({
 
 const ProductDetails = () => {
   const [productDetails, setProductDetails] = useState({});
+  const [categories, setCategories] = useState('');
+  const [users, setUsers] = useState({});
+  const [community, setCommunity] = useState({});
   const [loading, setLoading] = useState(false);
   let params = useParams();
   useEffect(async () => {
     try {
+      setLoading(true);
       const productDetails = await getProductById(params.productId);
       setProductDetails(productDetails);
-    } catch (error) {}
+      if (productDetails) {
+        const category = await getCategoryById(productDetails?.data?.category);
+        console.log(category);
+        setCategories(category);
+        const user = await getUserById(productDetails?.data?.userId);
+        console.log(user);
+        setUsers(user);
+        const community = await getUserById(productDetails?.data?.receiverCommunity);
+        console.log(community);
+        setCommunity(community);
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   if (loading) return <MatxLoading />;
@@ -33,7 +51,13 @@ const ProductDetails = () => {
       </Box>
       <Stack spacing={3}>
         <SimpleCard title="Product Details">
-          <ProductsForm productDetails={productDetails} setProductDetails={setProductDetails} />
+          <ProductsForm
+            productDetails={productDetails}
+            setProductDetails={setProductDetails}
+            category={categories}
+            user={users}
+            community={community}
+          />
         </SimpleCard>
       </Stack>
     </Container>

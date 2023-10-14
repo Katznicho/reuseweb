@@ -64,26 +64,20 @@ const ProductTable = () => {
       <StyledTable>
         <TableHead>
           <TableRow>
-            <TableCell align="center">Image</TableCell>
-            <TableCell align="left">Name</TableCell>
+            <TableCell align="center">Name</TableCell>
             <TableCell align="center">Category</TableCell>
             <TableCell align="center">Estimated Weight</TableCell>
             <TableCell align="center">Status</TableCell>
-            <TableCell align="right">Action</TableCell>
+            <TableCell align="center">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product) => (
             <TableRow key={product?.id}>
-              <TableCell align="center">
-                <StyledAvatar src={product?.data?.product?.coverImage} />
-              </TableCell>
-              {/* <TableCell align="center">{product?.data?.product?.title}</TableCell> */}
-
-              <TableCell align="center">{product?.data?.product?.title}</TableCell>
-              <TableCell align="center">{product?.data?.product?.category}</TableCell>
-              <TableCell align="center">{product?.data?.product?.estimatedWeight}</TableCell>
-              <TableCell align="center">{product?.data?.product?.status}</TableCell>
+              <TableCell align="center">{product?.data?.title}</TableCell>
+              <TableCell align="center">{product?.data?.category}</TableCell>
+              <TableCell align="center">{product?.data?.estimatedWeight}</TableCell>
+              <TableCell align="center">{product?.data?.status}</TableCell>
               <TableCell align="right">
                 <StyledButton
                   color="info"
